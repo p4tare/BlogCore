@@ -21,7 +21,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-        cache: true # To automatycznie obsłuży buforowanie paczek NuGet
+        #cache: true # To automatycznie obsłuży buforowanie paczek NuGet
         
     # 3. Buforowanie zależności NuGet (przyspiesza kolejne uruchomienia)
     - name: Cache NuGet packages
