@@ -167,7 +167,7 @@ public class BlogRepositoryTests : IntegrationTestBase
         var resultsForPost1 = _repository.GetCommentsByPostId(post1.Id);
 
         // Assert
-        Assert.AreEqual(5, resultsForPost1.Count());
+        Assert.AreEqual(100, resultsForPost1.Count());
     }
 
     #endregion
