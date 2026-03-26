@@ -36,14 +36,24 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
       
+    - name: Static Analysis (Linting)
+      run: dotnet format --verify-no-changes
+      
+    - name: Security Scan (Dependencies)
+      run: dotnet list package --vulnerable
+      
     # 5. Kompilacja całego rozwiązania w trybie Release
     - name: Build solution
       run: dotnet build --no-restore --configuration Release
       
     # 6. Uruchomienie testów funkcjonalnych
     # Testcontainers automatycznie uruchomi SQL Server w Dockerze na Runnerze
-    - name: Run Functional Tests
-      run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test_results.trx"
+    
+    - name: Run Tests with Coverage
+      run: dotnet test --no-build --logger "trx;LogFileName=test_results.trx" --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    
+    #- name: Run Functional Tests
+    #  run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test_results.trx"
       
     # 7. Przygotowanie wersji instalacyjnej aplikacji (Publish)
     - name: Publish Application
@@ -55,3 +65,10 @@ jobs:
       with:
         name: BlogCore-Binary
         path: ./publish
+        
+    # 9. Test Results
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Test-Results
+        path: '**/TestResults/*.trx'
